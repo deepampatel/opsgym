@@ -1,0 +1,35 @@
+{
+  "name": "opsgym",
+  "version": "0.1.0",
+  "description": "Codex skill for creating and evaluating operational simulation gyms before agents touch a real business.",
+  "author": {
+    "name": "OpsGym Team"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex-skill",
+    "agent-evals",
+    "operations",
+    "simulation",
+    "decision-intelligence"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OpsGym",
+    "shortDescription": "Train agents before they touch operations",
+    "longDescription": "OpsGym packages a Codex workflow for drafting arenas, confirming operational worlds, running policy tournaments, injecting shocks, and producing evidence-backed decision reports.",
+    "developerName": "OpsGym Team",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Use $opsgym to draft a KiranaOps arena.",
+      "Use $opsgym to confirm an arena and run a policy tournament.",
+      "Use $opsgym to add a UPI shock and rerun the gym."
+    ],
+    "brandColor": "#0F766E"
+  }
+}

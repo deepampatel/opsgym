@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$ROOT_DIR/skills/opsgym/scripts"
+SAMPLE_DIR="$ROOT_DIR/skills/opsgym/assets/sample-data"
+
+usage() {
+  cat <<'EOF'
+OpsGym CLI
+
+Usage:
+  ./plugins/opsgym/opsgym init --question <text> [--arena <id>] [--project <id>]
+  ./plugins/opsgym/opsgym list
+  ./plugins/opsgym/opsgym status
+  ./plugins/opsgym/opsgym next [--yes]
+  ./plugins/opsgym/opsgym loop [--yes] [--max-iterations <n>]
+  ./plugins/opsgym/opsgym compare --baseline <run-id> --candidate <run-id>
+  ./plugins/opsgym/opsgym agent-brief [--arena <id>] [--run <id>] [--agents <n>]
+  ./plugins/opsgym/opsgym agent-validate --file <agents.json>
+  ./plugins/opsgym/opsgym agent-run [--arena <id>] [--run <id>] [--agents <n>] [--model <model>] [--agents-file <path>]
+  ./plugins/opsgym/opsgym doctor [--skip-smoke]
+  ./plugins/opsgym/opsgym setup [--arena <id>] [--question <text>] [--mode fast|guided]
+  ./plugins/opsgym/opsgym confirm [--arena <id>]
+  ./plugins/opsgym/opsgym env [--arena <id>]
+  ./plugins/opsgym/opsgym shock [--arena <id>] --type <shock> [--day <n>] [--severity <0..1>]
+  ./plugins/opsgym/opsgym run [--arena <id>] [--run <id>] [--rollouts <n>]
+  ./plugins/opsgym/opsgym demo
+EOF
+}
+
+cmd="${1:-help}"
+if [[ $# -gt 0 ]]; then
+  shift
+fi
+
+case "$cmd" in
+  init)
+    node "$SCRIPT_DIR/init-config.mjs" "$@"
+    ;;
+  list)
+    node "$SCRIPT_DIR/list-adapters.mjs" "$@"
+    ;;
+  status)
+    node "$SCRIPT_DIR/status.mjs" "$@"
+    ;;
+  next)
+    node "$SCRIPT_DIR/next.mjs" "$@"
+    ;;
+  loop)
+    node "$SCRIPT_DIR/loop.mjs" "$@"
+    ;;
+  compare)
+    node "$SCRIPT_DIR/compare-runs.mjs" "$@"
+    ;;
+  agent-brief|agents-brief)
+    node "$SCRIPT_DIR/create-agent-brief.mjs" "$@"
+    ;;
+  agent-validate|agents-validate|validate-agents)
+    node "$SCRIPT_DIR/validate-agent-plans.mjs" "$@"
+    ;;
+  agent-run|agents)
+    node "$SCRIPT_DIR/create-env.mjs" "$@"
+    node "$SCRIPT_DIR/run-agent-tournament.mjs" "$@"
+    ;;
+  doctor)
+    node "$SCRIPT_DIR/doctor.mjs" "$@"
+    ;;
+  setup)
+    node "$SCRIPT_DIR/setup-arena.mjs" "$@"
+    ;;
+  confirm)
+    node "$SCRIPT_DIR/confirm-arena.mjs" "$@"
+    ;;
+  env|prepare)
+    node "$SCRIPT_DIR/create-env.mjs" "$@"
+    ;;
+  shock)
+    node "$SCRIPT_DIR/add-shock.mjs" "$@"
+    ;;
+  run)
+    node "$SCRIPT_DIR/create-env.mjs" "$@"
+    node "$SCRIPT_DIR/run-tournament.mjs" "$@"
+    ;;
+  demo)
+    rm -rf .ops-gym
+    node "$SCRIPT_DIR/setup-arena.mjs" \
+      --arena "kiranaops-v0" \
+      --input-dir "$SAMPLE_DIR" \
+      --question "Deepavali starts tomorrow. Should Nandi FMCG extend extra distributor credit to these kirana stores?" \
+      --workspace ".ops-gym"
+    node "$SCRIPT_DIR/confirm-arena.mjs" --arena "kiranaops-v0" --workspace ".ops-gym"
+    node "$SCRIPT_DIR/add-shock.mjs" \
+      --arena "kiranaops-v0" \
+      --type "upi_failure" \
+      --day "4" \
+      --severity "0.55" \
+      --label "UPI fails Saturday evening" \
+      --workspace ".ops-gym"
+    node "$SCRIPT_DIR/create-env.mjs" --arena "kiranaops-v0" --workspace ".ops-gym"
+    node "$SCRIPT_DIR/run-tournament.mjs" \
+      --arena "kiranaops-v0" \
+      --run "deepavali-credit-upi-shock-demo" \
+      --rollouts "100" \
+      --workspace ".ops-gym"
+    ;;
+  help|-h|--help|"")
+    usage
+    ;;
+  *)
+    echo "Unknown command: $cmd" >&2
+    usage >&2
+    exit 1
+    ;;
+esac
