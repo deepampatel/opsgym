@@ -33,7 +33,7 @@ The scalable architecture is:
 - `footballops-v0` is the showcase executable adapter for demos and examples.
 - Bundled demo adapters are `footballops-v0`, `deliveryops-v0`, and `hospitalops-v0`.
 - Every recommendation must be backed by a tournament result, scorecard, or explicit assumption.
-- Scripted policies are baselines. The intended product experience is LLM decision agents competing inside arenas and being scored by rollouts.
+- Scripted policies are baselines. The intended product experience is LLM decision agents competing inside arenas and being scored by rollouts. When the user asks to "run" an arena without specifying baseline or agents, prefer the agent workflow.
 - Arenas are first-class. Draft the world, review it, confirm it, then run it.
 - When the user has not defined the world yet, ask 3-5 high-leverage questions, not a giant questionnaire.
 - Do not hard-code a domain in the generic core. Add a new adapter when a domain needs executable behavior.
@@ -104,8 +104,14 @@ Phase resolution:
 2. No `arena.json`: draft an arena from the question and adapter.
 3. `arena.status = draft`: show the summary and ask for confirmation.
 4. Confirmed arena but no `environment.json`: materialize the environment.
-5. Environment but no run: run a baseline tournament.
-6. Baseline plus shock/candidate run: compare and report.
+5. Environment but no run: choose the run mode based on user intent (see below).
+6. Multiple runs or shock/candidate: compare and report.
+
+**Choosing the run mode (phase 5):**
+
+- If the user mentions **agents**, **competing**, **agent tournament**, **design agents**, **LLM agents**, or **strategies competing**: use the **Codex-authored agent workflow** — call `agent-brief`, read the brief, design 2-6 distinct agents, write the JSON, validate, and run with `agent-run --agents-file`.
+- If the user asks for a **baseline**, **policy tournament**, or does not mention agents: run a **baseline policy tournament** with `run`.
+- When in doubt, prefer the agent workflow — it is the primary product experience.
 
 For a new domain, OpsGym may draft the arena concept, but it must not claim executable simulation until an adapter exists.
 
