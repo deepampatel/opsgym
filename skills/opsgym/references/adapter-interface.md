@@ -5,16 +5,16 @@ OpsGym should stay generic. Domain behavior lives in arena adapters.
 Adapter location convention:
 
 ```text
-plugins/opsgym/skills/opsgym/arenas/<adapter-id>/adapter.mjs
+skills/opsgym/arenas/<adapter-id>/adapter.mjs
 ```
 
 Each adapter should export:
 
 ```js
 export const adapterMeta = {
-  id: "kiranaops-v0",
+  id: "footballops-v0",
   version: "0.1",
-  domain: "retail-ops"
+  domain: "sports-ops"
 };
 
 export async function buildDraftArena(input) {}

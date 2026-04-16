@@ -52,9 +52,9 @@ const adapter = createDemoArenaAdapter({
     { id: "pressers", name: "High Press Unit", label: "intensity specialists", demand: 24, fragility: 0.62, priority: 0.84, reliability: 0.72 }
   ],
   policies: {
-    "rotate-protect": { name: "Rotate and Protect", description: "Cap fragile minutes and use bench depth to preserve fitness.", creditAggression: 0.42, riskTolerance: 0.3, stockAggression: 0.86, upiFallback: 0.78, routePriority: 0.92 },
-    "full-strength": { name: "Full Strength Push", description: "Use strongest players and pressing intensity to maximize match impact.", creditAggression: 0.86, riskTolerance: 0.78, stockAggression: 1.13, upiFallback: 0.48, routePriority: 0.46 },
-    "fixture-priority": { name: "Fixture Priority", description: "Protect some groups while targeting the highest-pressure match.", creditAggression: 0.64, riskTolerance: 0.54, stockAggression: 1, upiFallback: 0.66, routePriority: 0.76 }
+    "rotate-protect": { name: "Rotate and Protect", description: "Cap fragile minutes and use bench depth to preserve fitness.", capacityAggression: 0.42, riskTolerance: 0.3, executionAggression: 0.86, fallbackRecovery: 0.78, priorityFocus: 0.92 },
+    "full-strength": { name: "Full Strength Push", description: "Use strongest players and pressing intensity to maximize match impact.", capacityAggression: 0.86, riskTolerance: 0.78, executionAggression: 1.13, fallbackRecovery: 0.48, priorityFocus: 0.46 },
+    "fixture-priority": { name: "Fixture Priority", description: "Protect some groups while targeting the highest-pressure match.", capacityAggression: 0.64, riskTolerance: 0.54, executionAggression: 1, fallbackRecovery: 0.66, priorityFocus: 0.76 }
   }
 });
 

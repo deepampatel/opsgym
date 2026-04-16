@@ -1,4 +1,0 @@
-Route A: Nandi Fresh, Annapurna Stores. Van capacity 520 units. Reliable morning delivery.
-Route B: Metro Mini Mart, Shree Corner. Van capacity 420 units. ORR traffic risk after 17:00.
-Route C: Lakshmi Provision. Van capacity 300 units. Rain-prone low road, prioritize before monsoon showers.
-Distributor note: total festival credit pool is 240000 INR. Oil and sweets are constrained SKUs.

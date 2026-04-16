@@ -52,9 +52,9 @@ const adapter = createDemoArenaAdapter({
     { id: "suburb", name: "Suburb", label: "long-haul orders", demand: 22, fragility: 0.5, priority: 0.55, reliability: 0.76 }
   ],
   policies: {
-    "sla-shield": { name: "SLA Shield", description: "Protect late-risk zones and buy fallback capacity before refunds spike.", creditAggression: 0.48, riskTolerance: 0.38, stockAggression: 0.92, upiFallback: 0.95, routePriority: 0.9 },
-    "surge-max": { name: "Surge Max", description: "Accept more demand and push rider utilization hard during peaks.", creditAggression: 0.82, riskTolerance: 0.78, stockAggression: 1.12, upiFallback: 0.62, routePriority: 0.48 },
-    "balanced-dispatch": { name: "Balanced Dispatch", description: "Split capacity between premium SLA and high-density throughput.", creditAggression: 0.62, riskTolerance: 0.55, stockAggression: 1, upiFallback: 0.78, routePriority: 0.72 }
+    "sla-shield": { name: "SLA Shield", description: "Protect late-risk zones and buy fallback capacity before refunds spike.", capacityAggression: 0.48, riskTolerance: 0.38, executionAggression: 0.92, fallbackRecovery: 0.95, priorityFocus: 0.9 },
+    "surge-max": { name: "Surge Max", description: "Accept more demand and push rider utilization hard during peaks.", capacityAggression: 0.82, riskTolerance: 0.78, executionAggression: 1.12, fallbackRecovery: 0.62, priorityFocus: 0.48 },
+    "balanced-dispatch": { name: "Balanced Dispatch", description: "Split capacity between premium SLA and high-density throughput.", capacityAggression: 0.62, riskTolerance: 0.55, executionAggression: 1, fallbackRecovery: 0.78, priorityFocus: 0.72 }
   }
 });
 

@@ -54,7 +54,7 @@ async function main() {
     if (!args.question) {
       console.log(`No OpsGym config found at ${configPath}`);
       console.log("Create one first:");
-      console.log("./plugins/opsgym/opsgym init --arena kiranaops-v0 --question \"<decision to simulate>\"");
+      console.log("./opsgym init --arena footballops-v0 --question \"<decision to simulate>\"");
       return;
     }
 
@@ -92,7 +92,7 @@ async function main() {
     console.log(state.paths.arenaSummary);
     console.log("");
     console.log("Then run:");
-    console.log("./plugins/opsgym/opsgym next --yes");
+    console.log("./opsgym next --yes");
     return;
   }
 

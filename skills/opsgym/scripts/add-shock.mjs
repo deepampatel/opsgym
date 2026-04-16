@@ -15,9 +15,9 @@ function fallbackShock(type, args) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const arenaId = args.arena || "kiranaops-v0";
+  const arenaId = args.arena || "footballops-v0";
   const workspace = args.workspace || ".ops-gym";
-  const type = args.type || "upi_failure";
+  const type = args.type || "fixture_congestion";
   const arenaSpec = await loadArenaSpec(workspace, arenaId);
   const adapter = await loadAdapter(adapterRefFromArena(arenaSpec));
   const shock = adapter.buildShock ? adapter.buildShock(type, args) : fallbackShock(type, args);

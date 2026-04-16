@@ -6,19 +6,19 @@
 {
   "schemaVersion": "0.2",
   "type": "opsgym-comparison",
-  "comparisonId": "baseline-vs-upi-shock",
-  "arenaId": "kiranaops-v0",
+  "comparisonId": "baseline-vs-fixture-shock",
+  "arenaId": "footballops-v0",
   "adapter": {
-    "id": "kiranaops-v0",
+    "id": "footballops-v0",
     "type": "arena-adapter"
   },
   "baselineRunId": "arena-first-baseline",
-  "candidateRunId": "arena-first-upi-shock",
+  "candidateRunId": "arena-first-fixture-shock",
   "baselineWinner": {},
   "candidateWinner": {},
   "summary": {
     "winnerChanged": true,
-    "why": "UPI failure increases value of payment-fallback policies."
+    "why": "Fixture congestion increases the value of rotation and injury-risk protection."
   }
 }
 ```

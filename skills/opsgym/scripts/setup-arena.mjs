@@ -4,9 +4,9 @@ import { parseArgs, splitList, writeArenaArtifacts } from "./lib/workspace.mjs";
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const arenaId = args.arena || "kiranaops-v0";
+  const arenaId = args.arena || "footballops-v0";
   const workspace = args.workspace || ".ops-gym";
-  const question = args.question || "Should Nandi FMCG extend extra festival credit to these kirana stores?";
+  const question = args.question || "Should the club rotate heavily or push starters through fixture congestion?";
   const setupMode = args.mode || "fast";
 
   const adapter = await loadAdapter(arenaId);

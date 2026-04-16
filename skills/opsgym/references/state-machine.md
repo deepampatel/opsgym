@@ -9,8 +9,8 @@ OpsGym should advance through explicit project states. Codex can orchestrate the
 ```json
 {
   "project": "holiday-demand-demo",
-  "arenaId": "kiranaops-v0",
-  "domain": "retail-ops",
+  "arenaId": "footballops-v0",
+  "domain": "sports-ops",
   "question": "Decision being tested",
   "workspace": ".ops-gym",
   "rollouts": 100,
@@ -27,11 +27,11 @@ Keep this file concise. It should not duplicate full arena, environment, run, or
 
 ```text
 - initialized session
-- drafted arena kiranaops-v0
+- drafted arena footballops-v0
 - user confirmed arena
 - materialized environment
 - ran baseline tournament
-- added UPI shock
+- added fixture congestion shock
 - compared baseline vs shock
 ```
 

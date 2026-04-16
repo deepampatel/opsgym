@@ -6,15 +6,15 @@
 {
   "schemaVersion": "0.2",
   "type": "opsgym-run",
-  "runId": "deepavali-credit-upi-shock-demo",
-  "arenaId": "kiranaops-v0",
+  "runId": "football-rotation-demo",
+  "arenaId": "footballops-v0",
   "adapter": {
-    "id": "kiranaops-v0",
+    "id": "footballops-v0",
     "type": "arena-adapter"
   },
   "question": "Business decision being tested",
   "rollouts": 100,
-  "seed": "deepavali-credit-upi-shock-demo",
+  "seed": "football-rotation-demo",
   "inputs": {
     "environmentPath": "/abs/path/environment.json"
   },

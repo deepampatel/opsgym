@@ -170,26 +170,26 @@ export function createDemoArenaAdapter(config) {
 
       for (let day = 1; day <= environment.horizonDays; day += 1) {
         const shock = activeShock(environment, day, random);
-        let capacity = environment.resources.capacity * (1 - shock * (1 - policy.routePriority) * 0.45);
+        let capacity = environment.resources.capacity * (1 - shock * (1 - policy.priorityFocus) * 0.45);
         capacity *= 0.9 + random() * 0.22;
         const dayRow = { day, shock: Number(shock.toFixed(3)), entities: [] };
         const entities = [...environment.simulationEntities].sort((a, b) => {
-          const aScore = policy.routePriority * a.reliability + policy.riskTolerance * a.priority + random() * 0.04;
-          const bScore = policy.routePriority * b.reliability + policy.riskTolerance * b.priority + random() * 0.04;
+          const aScore = policy.priorityFocus * a.reliability + policy.riskTolerance * a.priority + random() * 0.04;
+          const bScore = policy.priorityFocus * b.reliability + policy.riskTolerance * b.priority + random() * 0.04;
           return bScore - aScore;
         });
 
         for (const entity of entities) {
           const demand = Math.max(0, Math.round(entity.demand * (0.82 + random() * 0.38) * (1 + shock * entity.fragility)));
-          const fragilityPenalty = shock * entity.fragility * (1 - policy.upiFallback) * 0.55;
-          const target = demand * policy.stockAggression * (1 - fragilityPenalty);
+          const fragilityPenalty = shock * entity.fragility * (1 - policy.fallbackRecovery) * 0.55;
+          const target = demand * policy.executionAggression * (1 - fragilityPenalty);
           const served = Math.max(0, Math.min(Math.round(capacity), Math.round(target)));
           capacity -= served;
 
           const missed = Math.max(0, demand - served);
-          const exposure = served * policy.creditAggression * entity.fragility * (0.45 + policy.riskTolerance);
-          const fallbackCost = missed * policy.upiFallback * (0.35 + shock);
-          const cost = served * (0.22 + policy.stockAggression * 0.09) + fallbackCost + exposure * 0.18;
+          const exposure = served * policy.capacityAggression * entity.fragility * (0.45 + policy.riskTolerance);
+          const fallbackCost = missed * policy.fallbackRecovery * (0.35 + shock);
+          const cost = served * (0.22 + policy.executionAggression * 0.09) + fallbackCost + exposure * 0.18;
           const entityRisk = exposure * (1 - entity.reliability + entity.fragility * 0.5) + missed * entity.priority * shock;
 
           demandTotal += demand;

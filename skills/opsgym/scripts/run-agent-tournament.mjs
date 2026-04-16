@@ -42,20 +42,20 @@ function offlinePlans(count) {
     {
       id: "agent-resilience-first",
       name: "Agent: Resilience first",
-      thesis: "Protect service during payment and route shocks with high fallback, selective credit, and route priority.",
-      parameters: { creditAggression: 0.64, riskTolerance: 0.58, stockAggression: 1.02, upiFallback: 0.96, routePriority: 0.94 }
+      thesis: "Protect service during shocks with strong fallback recovery and high-priority capacity focus.",
+      parameters: { capacityAggression: 0.64, riskTolerance: 0.58, executionAggression: 1.02, fallbackRecovery: 0.96, priorityFocus: 0.94 }
     },
     {
       id: "agent-cash-guardian",
-      name: "Agent: Cash guardian",
-      thesis: "Preserve working capital and accept some lost sales to avoid repayment risk.",
-      parameters: { creditAggression: 0.34, riskTolerance: 0.3, stockAggression: 0.78, upiFallback: 0.35, routePriority: 0.58 }
+      name: "Agent: Risk guardian",
+      thesis: "Preserve scarce capacity and accept some missed throughput to avoid downside risk.",
+      parameters: { capacityAggression: 0.34, riskTolerance: 0.3, executionAggression: 0.78, fallbackRecovery: 0.35, priorityFocus: 0.58 }
     },
     {
       id: "agent-growth-push",
-      name: "Agent: Growth push",
-      thesis: "Push festival stock and credit aggressively, relying on demand lift to offset exposure.",
-      parameters: { creditAggression: 0.92, riskTolerance: 0.78, stockAggression: 1.1, upiFallback: 0.62, routePriority: 0.52 }
+      name: "Agent: Performance push",
+      thesis: "Push execution aggressively, relying on high throughput to offset risk and operating cost.",
+      parameters: { capacityAggression: 0.92, riskTolerance: 0.78, executionAggression: 1.1, fallbackRecovery: 0.62, priorityFocus: 0.52 }
     }
   ];
   return plans.slice(0, count);
@@ -200,7 +200,7 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const configPath = configPathFromArgs(args);
   const config = await readProjectConfigMaybe(configPath);
-  const arena = args.arena || config?.arenaId || "kiranaops-v0";
+  const arena = args.arena || config?.arenaId || "footballops-v0";
   const workspace = args.workspace || config?.workspace || ".ops-gym";
   const runId = args.run || `${config?.project || "agent"}-agents`;
   const rollouts = clampInteger(args.rollouts || config?.rollouts || 50, 1, 10000);

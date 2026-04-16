@@ -2,7 +2,7 @@ interface:
   display_name: "OpsGym"
   short_description: "Design and run operational gyms"
   brand_color: "#0F766E"
-  default_prompt: "Use $opsgym to draft a KiranaOps arena, confirm it, and run a policy tournament."
+  default_prompt: "Use $opsgym to draft a FootballOps arena, confirm it, and run a policy tournament."
 
 policy:
   allow_implicit_invocation: true

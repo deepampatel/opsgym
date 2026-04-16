@@ -32,6 +32,20 @@ function run(command, args, options = {}) {
   });
 }
 
+function pythonCandidates() {
+  return [
+    process.env.PYTHON,
+    "python3",
+    "/Users/deepampatel/anaconda3/bin/python",
+    "python"
+  ].filter(Boolean);
+}
+
+function hasYaml(python) {
+  const result = run(python, ["-c", "import yaml"]);
+  return result.status === 0;
+}
+
 function processOutput(result) {
   if (result.error) return result.error.message;
   return [result.stderr, result.stdout].filter(Boolean).join("\n").trim();
@@ -62,17 +76,22 @@ async function checkSkill() {
     fail("skill validation", "quick_validate.py not found");
     return;
   }
-  const result = run("python3", [validator, SKILL_DIR]);
+  const python = pythonCandidates().find((candidate) => hasYaml(candidate));
+  if (!python) {
+    fail("skill validation", "no Python interpreter with PyYAML found");
+    return;
+  }
+  const result = run(python, [validator, SKILL_DIR]);
   if (result.status === 0) pass("skill validation", result.stdout.trim());
   else fail("skill validation", processOutput(result));
 }
 
 async function checkAdapters() {
   try {
-    const adapter = await loadAdapter("kiranaops-v0");
-    pass("adapter kiranaops-v0", adapter.adapterMeta.description);
+    const adapter = await loadAdapter("footballops-v0");
+    pass("adapter footballops-v0", adapter.adapterMeta.description);
   } catch (error) {
-    fail("adapter kiranaops-v0", error.message || String(error));
+    fail("adapter footballops-v0", error.message || String(error));
   }
 }
 
@@ -93,8 +112,8 @@ async function checkSmokeRun() {
       "--config", config,
       "--workspace", resolve(workspace, ".ops-gym"),
       "--project", "doctor-smoke",
-      "--arena", "kiranaops-v0",
-      "--question", "Should the smoke test choose a resilient ops policy?",
+      "--arena", "footballops-v0",
+      "--question", "Should the smoke test rotate players through fixture congestion?",
       "--rollouts", "5"
     ]);
     if (init.status !== 0) throw new Error(processOutput(init) || "init failed");

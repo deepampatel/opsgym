@@ -1,25 +1,23 @@
 # OpsGym Scoring
 
-Each rollout produces raw business metrics:
+Each rollout produces raw arena metrics. The built-in demo adapters use:
 
-- `grossMargin`: rupees of realized product margin.
-- `lostSales`: rupees of unmet demand.
-- `stockoutUnits`: unmet product units.
-- `creditExposure`: rupees added to distributor/customer credit.
-- `repaymentRisk`: risk-adjusted receivable exposure.
+- `throughput`: completed work, minutes, cases, orders, or service units.
 - `serviceLevel`: served demand divided by total demand.
+- `backlog`: unserved demand, uncovered minutes, queues, or late work.
+- `operatingCost`: cost of capacity, fallback, overtime, or expedite actions.
+- `risk`: domain-specific downside risk such as injury, refunds, or clinical delay.
 
 The default OpsGym score is intentionally transparent and reported as points:
 
 ```text
 opsScore =
   1000
-  + grossMargin / 90
-  - lostSales / 300
-  - repaymentRisk / 80
-  - creditExposure / 220
-  - stockoutUnits / 10
-  + serviceLevel * 700
+  + throughput * throughputWeight
+  + serviceLevel * 550
+  - backlog * backlogWeight
+  - operatingCost * costWeight
+  - risk * riskWeight
 ```
 
 Use the score for policy ranking, but report raw metrics too. If a user cares more about growth or risk, rerun with a new scoring function or explain how the ranking would change.

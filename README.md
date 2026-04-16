@@ -2,17 +2,16 @@
 
 OpsGym is a Codex-native skill/plugin for building operational simulation arenas where decision agents compete before decisions touch reality.
 
-The repo is intentionally scoped to the OpsGym plugin:
+The repo root is the OpsGym plugin:
 
 ```text
-plugins/opsgym/
-  .codex-plugin/plugin.json
-  opsgym
-  skills/opsgym/
-    SKILL.md
-    arenas/
-    scripts/
-    references/
+.codex-plugin/plugin.json
+opsgym
+skills/opsgym/
+  SKILL.md
+  arenas/
+  scripts/
+  references/
 ```
 
 Generated simulation workspaces live outside the skill code under `.ops-gym/` in the active project and are ignored by Git.
@@ -37,8 +36,8 @@ The key design principle is separation:
 
 ## Current Features
 
-- Codex skill: `plugins/opsgym/skills/opsgym/SKILL.md`
-- CLI wrapper: `./plugins/opsgym/opsgym`
+- Codex skill: `skills/opsgym/SKILL.md`
+- CLI wrapper: `./opsgym`
 - Arena state machine: `init`, `status`, `next`, `loop`
 - Arena lifecycle: `setup`, `confirm`, `env`
 - Baseline policy tournaments: `run`
@@ -52,17 +51,16 @@ The key design principle is separation:
 
 ## Built-In Runnable Arenas
 
-OpsGym currently ships four executable adapters:
+OpsGym currently ships three executable adapters:
 
-- `kiranaops-v0`: retail distribution, inventory, credit, UPI/payment risk, route constraints
+- `footballops-v0`: fixture congestion, player minutes, rotation, pressing intensity, injury risk
 - `deliveryops-v0`: rider allocation, SLA pressure, rain shocks, surge demand, refund risk
 - `hospitalops-v0`: bed allocation, triage queues, staff fatigue, emergency surge, elective deferral
-- `footballops-v0`: fixture congestion, player minutes, rotation, pressing intensity, injury risk
 
 List installed arenas:
 
 ```bash
-./plugins/opsgym/opsgym list
+./opsgym list
 ```
 
 ## Quick Start
@@ -70,12 +68,12 @@ List installed arenas:
 Run a policy tournament:
 
 ```bash
-./plugins/opsgym/opsgym setup \
+./opsgym setup \
   --arena deliveryops-v0 \
   --question "Should the marketplace accept surge demand during rain or protect delivery SLA?" \
   --confirm
 
-./plugins/opsgym/opsgym run \
+./opsgym run \
   --arena deliveryops-v0 \
   --run delivery-demo \
   --rollouts 50
@@ -84,12 +82,12 @@ Run a policy tournament:
 Run a Codex-authored agent tournament:
 
 ```bash
-./plugins/opsgym/opsgym setup \
+./opsgym setup \
   --arena footballops-v0 \
   --question "Should the club rotate heavily or push starters through fixture congestion?" \
   --confirm
 
-./plugins/opsgym/opsgym agent-brief \
+./opsgym agent-brief \
   --arena footballops-v0 \
   --run football-agents \
   --agents 4
@@ -98,10 +96,10 @@ Run a Codex-authored agent tournament:
 Then ask Codex to read `.ops-gym/agent-plans/football-agents.brief.md`, write `.ops-gym/agent-plans/football-agents.json`, and run:
 
 ```bash
-./plugins/opsgym/opsgym agent-validate \
+./opsgym agent-validate \
   --file .ops-gym/agent-plans/football-agents.json
 
-./plugins/opsgym/opsgym agent-run \
+./opsgym agent-run \
   --arena footballops-v0 \
   --run football-agents \
   --agents-file .ops-gym/agent-plans/football-agents.json \
@@ -123,7 +121,7 @@ Use $opsgym. Run footballops-v0. Should the club rotate heavily or push starters
 ```
 
 ```text
-Use $opsgym. Run kiranaops-v0. Deepavali starts tomorrow. Should the distributor extend extra credit under UPI risk? Create Codex-authored agents, validate them, run 100 rollouts, add a UPI failure shock, rerun, and compare.
+Use $opsgym. Run footballops-v0. Add a midweek cup congestion shock, rerun the agent tournament, and compare whether the winning rotation strategy changes.
 ```
 
 ## Agentic Model
@@ -143,7 +141,7 @@ Today, the packaged runner executes rollouts sequentially in-process. The work i
 Create:
 
 ```text
-plugins/opsgym/skills/opsgym/arenas/<arena-id>/adapter.mjs
+skills/opsgym/arenas/<arena-id>/adapter.mjs
 ```
 
 The adapter must export:
@@ -155,11 +153,11 @@ The adapter must export:
 - `runPolicy`
 - `summarizeScoreboard`
 
-Read `plugins/opsgym/skills/opsgym/references/adapter-interface.md` before adding a domain.
+Read `skills/opsgym/references/adapter-interface.md` before adding a domain.
 
 ## Validation
 
 ```bash
-./plugins/opsgym/opsgym doctor --skip-smoke
-python3 /Users/deepampatel/.codex/skills/.system/skill-creator/scripts/quick_validate.py plugins/opsgym/skills/opsgym
+./opsgym doctor --skip-smoke
+python3 /Users/deepampatel/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/opsgym
 ```

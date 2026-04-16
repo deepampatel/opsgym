@@ -11,11 +11,11 @@ function exampleAgent(index) {
     name: `Codex Agent ${index}`,
     thesis: "Replace this with a distinct decision thesis before running the tournament.",
     parameters: {
-      creditAggression: 0.55,
+      capacityAggression: 0.55,
       riskTolerance: 0.45,
-      stockAggression: 0.95,
-      upiFallback: 0.75,
-      routePriority: 0.75
+      executionAggression: 0.95,
+      fallbackRecovery: 0.75,
+      priorityFocus: 0.75
     }
   };
 }
@@ -64,7 +64,7 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const configPath = configPathFromArgs(args);
   const config = await readProjectConfigMaybe(configPath);
-  const arena = args.arena || config?.arenaId || "kiranaops-v0";
+  const arena = args.arena || config?.arenaId || "footballops-v0";
   const workspace = args.workspace || config?.workspace || ".ops-gym";
   const runId = args.run || `${config?.project || "agent"}-agents`;
   const agentCount = Number.parseInt(args.agents || 3, 10);
@@ -83,7 +83,7 @@ async function main() {
   console.log(`Agent brief: ${briefPath}`);
   console.log(`Template: ${templatePath}`);
   console.log(`Next: write real agents to ${resolve(outDir, `${runId}.json`)}`);
-  console.log(`Run: ./plugins/opsgym/opsgym agent-run --run ${runId} --agents-file ${resolve(outDir, `${runId}.json`)}`);
+  console.log(`Run: ./opsgym agent-run --run ${runId} --agents-file ${resolve(outDir, `${runId}.json`)}`);
 }
 
 main().catch((error) => {

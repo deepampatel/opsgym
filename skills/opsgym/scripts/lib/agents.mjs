@@ -18,13 +18,13 @@ export const AGENT_SCHEMA = {
           parameters: {
             type: "object",
             properties: {
-              creditAggression: { type: "number" },
+              capacityAggression: { type: "number" },
               riskTolerance: { type: "number" },
-              stockAggression: { type: "number" },
-              upiFallback: { type: "number" },
-              routePriority: { type: "number" }
+              executionAggression: { type: "number" },
+              fallbackRecovery: { type: "number" },
+              priorityFocus: { type: "number" }
             },
-            required: ["creditAggression", "riskTolerance", "stockAggression", "upiFallback", "routePriority"],
+            required: ["capacityAggression", "riskTolerance", "executionAggression", "fallbackRecovery", "priorityFocus"],
             additionalProperties: false
           }
         },
@@ -38,19 +38,19 @@ export const AGENT_SCHEMA = {
 };
 
 export const PARAMETER_DESCRIPTIONS = [
-  ["creditAggression", "how much credit pool to deploy, 0.05 to 1"],
-  ["riskTolerance", "repayment risk appetite, 0.05 to 1"],
-  ["stockAggression", "how aggressively to allocate inventory, 0.4 to 1.15"],
-  ["upiFallback", "ability to recover payment-failure demand through fallback, 0 to 1"],
-  ["routePriority", "attention to route reliability and disrupted routes, 0 to 1"]
+  ["capacityAggression", "how much scarce capacity or budget to deploy, 0.05 to 1"],
+  ["riskTolerance", "willingness to accept downside risk, 0.05 to 1"],
+  ["executionAggression", "how aggressively to pursue throughput or performance, 0.4 to 1.15"],
+  ["fallbackRecovery", "ability to recover missed demand through fallback options, 0 to 1"],
+  ["priorityFocus", "attention to high-priority entities and disrupted paths, 0 to 1"]
 ];
 
 export const PARAMETER_RANGES = {
-  creditAggression: [0.05, 1],
+  capacityAggression: [0.05, 1],
   riskTolerance: [0.05, 1],
-  stockAggression: [0.4, 1.15],
-  upiFallback: [0, 1],
-  routePriority: [0, 1]
+  executionAggression: [0.4, 1.15],
+  fallbackRecovery: [0, 1],
+  priorityFocus: [0, 1]
 };
 
 export function clamp(value, min, max) {
@@ -65,11 +65,11 @@ export function clampInteger(value, min, max) {
 
 export function clampParameters(parameters) {
   return {
-    creditAggression: clamp(parameters.creditAggression, ...PARAMETER_RANGES.creditAggression),
+    capacityAggression: clamp(parameters.capacityAggression, ...PARAMETER_RANGES.capacityAggression),
     riskTolerance: clamp(parameters.riskTolerance, ...PARAMETER_RANGES.riskTolerance),
-    stockAggression: clamp(parameters.stockAggression, ...PARAMETER_RANGES.stockAggression),
-    upiFallback: clamp(parameters.upiFallback, ...PARAMETER_RANGES.upiFallback),
-    routePriority: clamp(parameters.routePriority, ...PARAMETER_RANGES.routePriority)
+    executionAggression: clamp(parameters.executionAggression, ...PARAMETER_RANGES.executionAggression),
+    fallbackRecovery: clamp(parameters.fallbackRecovery, ...PARAMETER_RANGES.fallbackRecovery),
+    priorityFocus: clamp(parameters.priorityFocus, ...PARAMETER_RANGES.priorityFocus)
   };
 }
 
@@ -79,20 +79,8 @@ export function environmentBrief(environment) {
     horizonDays: environment.horizonDays,
     shocks: environment.shocks,
     metrics: environment.metrics,
-    distributor: environment.distributor,
-    stores: environment.stores?.map((store) => ({
-      id: store.id,
-      name: store.name,
-      trustScore: store.trustScore,
-      upiShare: store.upiShare,
-      customerCreditHabit: store.customerCreditHabit,
-      footfallIndex: store.footfallIndex,
-      outstanding: store.outstanding,
-      creditLimit: store.creditLimit,
-      daysLate: store.daysLate,
-      route: store.route,
-      requestedUnits: store.requestedUnits
-    }))
+    resources: environment.resources,
+    entities: environment.simulationEntities || environment.entities
   };
 }
 

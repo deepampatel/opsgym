@@ -4,7 +4,7 @@ import { loadArenaSpec, parseArgs, writeEnvironmentArtifacts } from "./lib/works
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const arenaId = args.arena || "kiranaops-v0";
+  const arenaId = args.arena || "footballops-v0";
   const workspace = args.workspace || ".ops-gym";
   const allowDraft = Boolean(args["allow-draft"]);
   const arenaSpec = await loadArenaSpec(workspace, arenaId);

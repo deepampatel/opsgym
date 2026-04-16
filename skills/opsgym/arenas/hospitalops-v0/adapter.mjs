@@ -52,9 +52,9 @@ const adapter = createDemoArenaAdapter({
     { id: "elective", name: "Elective", label: "scheduled procedures", demand: 20, fragility: 0.36, priority: 0.45, reliability: 0.9 }
   ],
   policies: {
-    "emergency-shield": { name: "Emergency Shield", description: "Defer lower-acuity work and route capacity to emergency and ICU.", creditAggression: 0.5, riskTolerance: 0.34, stockAggression: 0.96, upiFallback: 0.86, routePriority: 0.94 },
-    "throughput-push": { name: "Throughput Push", description: "Use overtime to keep all units moving despite fatigue risk.", creditAggression: 0.86, riskTolerance: 0.72, stockAggression: 1.1, upiFallback: 0.72, routePriority: 0.58 },
-    "defer-and-stabilize": { name: "Defer and Stabilize", description: "Sacrifice elective throughput to reduce harm and staff stress under surge.", creditAggression: 0.36, riskTolerance: 0.28, stockAggression: 0.84, upiFallback: 0.8, routePriority: 0.88 }
+    "emergency-shield": { name: "Emergency Shield", description: "Defer lower-acuity work and route capacity to emergency and ICU.", capacityAggression: 0.5, riskTolerance: 0.34, executionAggression: 0.96, fallbackRecovery: 0.86, priorityFocus: 0.94 },
+    "throughput-push": { name: "Throughput Push", description: "Use overtime to keep all units moving despite fatigue risk.", capacityAggression: 0.86, riskTolerance: 0.72, executionAggression: 1.1, fallbackRecovery: 0.72, priorityFocus: 0.58 },
+    "defer-and-stabilize": { name: "Defer and Stabilize", description: "Sacrifice elective throughput to reduce harm and staff stress under surge.", capacityAggression: 0.36, riskTolerance: 0.28, executionAggression: 0.84, fallbackRecovery: 0.8, priorityFocus: 0.88 }
   }
 });
 

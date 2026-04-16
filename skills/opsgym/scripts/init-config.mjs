@@ -26,7 +26,7 @@ async function main() {
   console.log(`Progress log: ${progress}`);
   console.log(`Arena: ${config.arenaId}`);
   console.log(`Project: ${config.project}`);
-  console.log(`Next: ./plugins/opsgym/opsgym next`);
+  console.log(`Next: ./opsgym next`);
 }
 
 main().catch((error) => {

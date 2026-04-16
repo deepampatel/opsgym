@@ -30,8 +30,8 @@ The scalable architecture is:
 - `opsgym.json` is the intended project-level session contract: project name, arena id, user question, workspace, rollouts, seed, and mode.
 - `.ops-gym/progress.md` is the intended cross-run journal for state-machine progress and major decisions.
 - Prefer one deep arena over many shallow arenas, but do not force a domain that the user did not ask for.
-- `KiranaOps-v0` is one installed executable adapter, not the default mental model for OpsGym.
-- Bundled demo adapters are `kiranaops-v0`, `deliveryops-v0`, `hospitalops-v0`, and `footballops-v0`.
+- `footballops-v0` is the showcase executable adapter for demos and examples.
+- Bundled demo adapters are `footballops-v0`, `deliveryops-v0`, and `hospitalops-v0`.
 - Every recommendation must be backed by a tournament result, scorecard, or explicit assumption.
 - Scripted policies are baselines. The intended product experience is LLM decision agents competing inside arenas and being scored by rollouts.
 - Arenas are first-class. Draft the world, review it, confirm it, then run it.
@@ -50,7 +50,7 @@ The scalable architecture is:
 - Run comparison: `compare`.
 - Local health checks: `doctor`.
 - Outputs: `arena.json`, `environment.json`, `run.json`, `rollouts.json`, `scores.json`, `decision-memo.md`, comparison artifacts, and HTML reports.
-- Built-in runnable arenas: `kiranaops-v0`, `deliveryops-v0`, `hospitalops-v0`, `footballops-v0`.
+- Built-in runnable arenas: `footballops-v0`, `deliveryops-v0`, `hospitalops-v0`.
 - Scalable extension point: `arenas/<adapter-id>/adapter.mjs`.
 
 ## Scalability Notes
@@ -64,13 +64,13 @@ The scalable architecture is:
 ## Adapter Selection
 
 - Start from the user's situation, not from the bundled demo.
-- Use `kiranaops-v0` only when the user asks for kirana, FMCG, retail distribution, store credit, UPI/payment reliability, inventory allocation, or a clearly similar operating model.
+- Use `footballops-v0` as the default showcase arena for demos, examples, and first-run smoke tests.
 - Use `deliveryops-v0` for delivery marketplaces, rider dispatch, SLA/refund pressure, rain, and surge demand demos.
 - Use `hospitalops-v0` for bed capacity, triage, staff fatigue, emergency surge, and elective deferral demos.
 - Use `footballops-v0` for fixture congestion, player rotation, injury risk, and match-readiness demos.
 - For a different domain, first design the arena in domain-native terms: actors, actions, constraints, shocks, policies, and metrics.
 - If no executable adapter exists for that domain yet, say that directly and offer to create a new adapter before running simulations.
-- Never rename a non-retail situation into KiranaOps just because the demo adapter exists.
+- Never rename an unrelated situation into football just because football is the showcase adapter.
 
 ## State-Machine Workflow
 
@@ -227,6 +227,12 @@ For non-installed domains, do not run the commands above until an adapter exists
 
 ## Bundled Demo Arena Prompts
 
+Football showcase:
+
+```text
+Use $opsgym. Run footballops-v0. Should the club rotate heavily or push starters through fixture congestion? Create Codex-authored agents, validate them, run 50 rollouts, and explain the injury-risk tradeoff.
+```
+
 Delivery:
 
 ```text
@@ -239,28 +245,19 @@ Hospital:
 Use $opsgym. Run hospitalops-v0. Should the hospital defer elective work to protect emergency capacity during a surge? Create Codex-authored agents, validate them, run 50 rollouts, and report the clinical-risk tradeoff.
 ```
 
-Football:
-
-```text
-Use $opsgym. Run footballops-v0. Should the club rotate heavily or push starters through fixture congestion? Create Codex-authored agents, validate them, run 50 rollouts, and explain the injury-risk tradeoff.
-```
-
-## Recommended Demo Prompt For Installed Kirana Adapter
+## Recommended Demo Prompt For Showcase Football Adapter
 
 ```text
 Use $opsgym.
 
 Business question:
-Deepavali starts tomorrow. Should Nandi FMCG extend extra distributor credit to these kirana stores?
-
-Inputs:
-- plugins/opsgym/skills/opsgym/assets/sample-data
+Should the club rotate heavily or push starters through fixture congestion?
 
 Tasks:
-1. Draft a fast KiranaOps-v0 arena and show me the summary.
+1. Draft a fast FootballOps-v0 arena and show me the summary.
 2. Ask me for any critical edits before confirmation.
 3. Confirm the arena, create the environment, and run 100 rollouts.
-4. Add a Saturday evening UPI failure shock and rerun the gym.
+4. Add a midweek cup congestion shock and rerun the gym.
 5. Render a dashboard and recommendation memo.
 ```
 
@@ -272,7 +269,6 @@ Tasks:
 - Read `references/env-schema.md` when creating or changing environment files.
 - Read `references/run-schema.md` when changing run outputs.
 - Read `references/comparison-schema.md` when adding baseline-vs-shock workflows.
-- Read `references/kiranaops-v0.md` when modifying the first arena.
 - Read `references/scoring.md` when changing tournament metrics or evaluator behavior.
 
 ## Reporting Rules
