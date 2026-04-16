@@ -1,9 +1,9 @@
 {
-  "name": "opsgym",
+  "name": "banditdex",
   "version": "0.1.0",
   "description": "Codex skill for creating and evaluating operational simulation gyms before agents touch a real business.",
   "author": {
-    "name": "OpsGym Team"
+    "name": "BanditDex Team"
   },
   "license": "MIT",
   "keywords": [
@@ -15,10 +15,10 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "OpsGym",
+    "displayName": "BanditDex",
     "shortDescription": "Train agents before they touch operations",
-    "longDescription": "OpsGym packages a Codex workflow for drafting arenas, confirming operational worlds, running policy tournaments, injecting shocks, and producing evidence-backed decision reports.",
-    "developerName": "OpsGym Team",
+    "longDescription": "BanditDex packages a Codex workflow for drafting arenas, confirming operational worlds, running policy tournaments, injecting shocks, and producing evidence-backed decision reports.",
+    "developerName": "BanditDex Team",
     "category": "Developer Tools",
     "capabilities": [
       "Read",
@@ -26,9 +26,9 @@
       "Interactive"
     ],
     "defaultPrompt": [
-      "Use $opsgym. Run footballops-v0. Should the club rotate heavily or push starters through fixture congestion? Create agents, run 100 rollouts, and explain who wins.",
-      "Use $opsgym. Run deliveryops-v0. Should the marketplace accept surge demand during rain or protect SLA? Run agent tournament and compare with baseline.",
-      "Use $opsgym. Run hospitalops-v0. Should the hospital defer elective work during a surge? Add a flu-surge shock and rerun."
+      "Use $banditdex. Run footballops-v0. Should the club rotate heavily or push starters through fixture congestion? Create agents, run 100 rollouts, and explain who wins.",
+      "Use $banditdex. Run deliveryops-v0. Should the marketplace accept surge demand during rain or protect SLA? Run agent tournament and compare with baseline.",
+      "Use $banditdex. Run hospitalops-v0. Should the hospital defer elective work during a surge? Add a flu-surge shock and rerun."
     ],
     "brandColor": "#0F766E"
   }

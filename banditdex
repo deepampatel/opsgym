@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$ROOT_DIR/skills/banditdex/scripts"
+NODE_BIN="${NODE_BIN:-node}"
+
+node_major="$("$NODE_BIN" -p 'Number(process.versions.node.split(".")[0])' 2>/dev/null || echo 0)"
+if [[ "$node_major" -lt 18 && -x "$HOME/.nvm/versions/node/v24.2.0/bin/node" ]]; then
+  NODE_BIN="$HOME/.nvm/versions/node/v24.2.0/bin/node"
+fi
+
+usage() {
+  cat <<'EOF'
+BanditDex CLI
+
+Usage:
+  ./banditdex init --question <text> [--arena <id>] [--project <id>]
+  ./banditdex list
+  ./banditdex status
+  ./banditdex next [--yes]
+  ./banditdex loop [--yes] [--max-iterations <n>]
+  ./banditdex compare --baseline <run-id> --candidate <run-id>
+  ./banditdex agent-brief [--arena <id>] [--run <id>] [--agents <n>]
+  ./banditdex agent-validate --file <agents.json>
+  ./banditdex agent-run [--arena <id>] [--run <id>] [--agents <n>] [--model <model>] [--agents-file <path>]
+  ./banditdex doctor [--skip-smoke]
+  ./banditdex setup [--arena <id>] [--question <text>] [--mode fast|guided]
+  ./banditdex confirm [--arena <id>]
+  ./banditdex env [--arena <id>]
+  ./banditdex shock [--arena <id>] --type <shock> [--day <n>] [--severity <0..1>]
+  ./banditdex run [--arena <id>] [--run <id>] [--rollouts <n>]
+  ./banditdex showcase [--arena <id>]
+EOF
+}
+
+cmd="${1:-help}"
+if [[ $# -gt 0 ]]; then
+  shift
+fi
+
+case "$cmd" in
+  init)
+    "$NODE_BIN" "$SCRIPT_DIR/init-config.mjs" "$@"
+    ;;
+  list)
+    "$NODE_BIN" "$SCRIPT_DIR/list-adapters.mjs" "$@"
+    ;;
+  status)
+    "$NODE_BIN" "$SCRIPT_DIR/status.mjs" "$@"
+    ;;
+  next)
+    "$NODE_BIN" "$SCRIPT_DIR/next.mjs" "$@"
+    ;;
+  loop)
+    "$NODE_BIN" "$SCRIPT_DIR/loop.mjs" "$@"
+    ;;
+  compare)
+    "$NODE_BIN" "$SCRIPT_DIR/compare-runs.mjs" "$@"
+    ;;
+  agent-brief|agents-brief)
+    "$NODE_BIN" "$SCRIPT_DIR/create-agent-brief.mjs" "$@"
+    ;;
+  agent-validate|agents-validate|validate-agents)
+    "$NODE_BIN" "$SCRIPT_DIR/validate-agent-plans.mjs" "$@"
+    ;;
+  agent-run|agents)
+    "$NODE_BIN" "$SCRIPT_DIR/create-env.mjs" "$@"
+    "$NODE_BIN" "$SCRIPT_DIR/run-agent-tournament.mjs" "$@"
+    ;;
+  doctor)
+    "$NODE_BIN" "$SCRIPT_DIR/doctor.mjs" "$@"
+    ;;
+  setup)
+    "$NODE_BIN" "$SCRIPT_DIR/setup-arena.mjs" "$@"
+    ;;
+  confirm)
+    "$NODE_BIN" "$SCRIPT_DIR/confirm-arena.mjs" "$@"
+    ;;
+  env|prepare)
+    "$NODE_BIN" "$SCRIPT_DIR/create-env.mjs" "$@"
+    ;;
+  shock)
+    "$NODE_BIN" "$SCRIPT_DIR/add-shock.mjs" "$@"
+    ;;
+  run)
+    "$NODE_BIN" "$SCRIPT_DIR/create-env.mjs" "$@"
+    "$NODE_BIN" "$SCRIPT_DIR/run-tournament.mjs" "$@"
+    ;;
+  showcase)
+    # Parse --arena flag, default to footballops-v0
+    DEMO_ARENA="footballops-v0"
+    prev_arg=""
+    for arg in "$@"; do
+      if [[ "$prev_arg" == "--arena" ]]; then
+        DEMO_ARENA="$arg"
+      fi
+      prev_arg="$arg"
+    done
+
+    rm -rf .banditdex
+    echo ""
+    echo "=== Step 1: Draft arena ($DEMO_ARENA) ==="
+    "$NODE_BIN" "$SCRIPT_DIR/setup-arena.mjs" \
+      --arena "$DEMO_ARENA" \
+      --workspace ".banditdex"
+    echo ""
+    echo "=== Step 2: Confirm arena ==="
+    "$NODE_BIN" "$SCRIPT_DIR/confirm-arena.mjs" --arena "$DEMO_ARENA" --workspace ".banditdex"
+    echo ""
+    echo "=== Step 3: Create environment ==="
+    "$NODE_BIN" "$SCRIPT_DIR/create-env.mjs" --arena "$DEMO_ARENA" --workspace ".banditdex"
+    echo ""
+    echo "=== Step 4: Run baseline policy tournament (100 rollouts) ==="
+    "$NODE_BIN" "$SCRIPT_DIR/run-tournament.mjs" \
+      --arena "$DEMO_ARENA" \
+      --run "baseline" \
+      --rollouts "100" \
+      --workspace ".banditdex"
+    echo ""
+    echo "=== Step 5: Run agent tournament — 4 agents compete (100 rollouts) ==="
+    "$NODE_BIN" "$SCRIPT_DIR/run-agent-tournament.mjs" \
+      --arena "$DEMO_ARENA" \
+      --run "agents" \
+      --agents "4" \
+      --offline \
+      --rollouts "100" \
+      --workspace ".banditdex"
+    echo ""
+    echo "=== Step 6: Compare baseline vs agent tournament ==="
+    "$NODE_BIN" "$SCRIPT_DIR/compare-runs.mjs" \
+      --baseline "baseline" \
+      --candidate "agents" \
+      --workspace ".banditdex"
+    echo ""
+    echo "=== Showcase complete ==="
+    echo "Reports:"
+    echo "  Baseline:   .banditdex/reports/baseline.html"
+    echo "  Agents:     .banditdex/reports/agents.html"
+    echo "  Comparison: .banditdex/reports/baseline-vs-agents.html"
+    ;;
+  help|-h|--help|"")
+    usage
+    ;;
+  *)
+    echo "Unknown command: $cmd" >&2
+    usage >&2
+    exit 1
+    ;;
+esac
